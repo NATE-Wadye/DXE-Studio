@@ -1,32 +1,34 @@
 
 import { useState } from 'react'
 
+
 const projects = [
   {
-    title: 'Project: Crimson',
-    genre: 'ACTION · FANTASY',
+    title: 'Love Unseen Beneath',
+    genre: 'ROMANCE · DRAMA',
     language: 'HINDI DUB',
     status: 'IN PRODUCTION',
-    symbol: '紅',
-    color: 'from-red-950 via-rose-950 to-black',
+    poster: 'https://preview.redd.it/love-unseen-beneath-the-clear-night-sky-new-visual-v0-oxuyfs9e915h1.jpeg?width=1080&crop=smart&auto=webp&s=7349bedb294a280adba8e8481f0d32ff49465c30',
+    color: 'from-rose-950 via-red-950 to-black',
   },
   {
-    title: 'Beyond the Rift',
-    genre: 'ADVENTURE · MYSTERY',
+    title: 'I Want to End This Love Game',
+    genre: 'ROMANCE · ROMANTIC COMEDY',
     language: 'HINDI DUB',
     status: 'COMING SOON',
-    symbol: '境',
+    poster: 'https://imgs.search.brave.com/L2ngeIVbHaKY8aL0mQV8bezSO8efd7KXYotYAqYzioU/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9jZG4u/YW5pbWUtcGxhbmV0/LmNvbS9tYW5nYS9w/cmltYXJ5L2Fpc2hp/dGVydS1nYW1lLXdv/LW93YXJhc2V0YWkt/MS0yODV4Mzk5Lndl/YnA_dD0xNzA1MTA4/NTg0',
     color: 'from-indigo-950 via-purple-950 to-black',
   },
   {
-    title: 'Eternal Eclipse',
-    genre: 'DARK FANTASY',
+    title: 'DanMachi',
+    genre: 'ACTION · ADVENTURE · FANTASY',
     language: 'FAN PROJECT',
     status: 'IN PRODUCTION',
-    symbol: '蝕',
+    poster: 'https://imgs.search.brave.com/WIQW58fj_qMUhzwJ_K2P7hbAHrF-Ki6Xg1FsqFG1_gQ/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9pLmV0/c3lzdGF0aWMuY29t/LzYyNDExNDc4L3Iv/aWwvNWUzY2JkLzc2/MzgzMzEwMTQvaWxf/MzAweDMwMC43NjM4/MzMxMDE0XzlweXcu/anBn',
     color: 'from-orange-950 via-red-950 to-black',
   },
 ]
+
 
 function SectionLabel({ children }) {
   return (
@@ -36,24 +38,37 @@ function SectionLabel({ children }) {
   )
 }
 
+
 function ProjectCard({ project }) {
   return (
     <article className="group overflow-hidden rounded-xl border border-white/10 bg-[#111114] transition duration-300 hover:-translate-y-2 hover:border-red-500/60">
       <div
-        className={`relative flex h-64 items-center justify-center overflow-hidden bg-gradient-to-br ${project.color}`}
+        className={`relative flex h-80 items-center justify-center overflow-hidden bg-gradient-to-br ${project.color}`}
       >
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.09),transparent_65%)]" />
+        {/* Poster artwork */}
+        <img
+          src={project.poster}
+          alt={`${project.title} poster`}
+          className="absolute inset-0 h-full w-full object-cover object-center transition duration-700 group-hover:scale-105"
+          loading="lazy"
+        />
 
-        <span className="relative select-none text-8xl font-black text-white/10 transition duration-500 group-hover:scale-110 group-hover:text-red-500/30">
-          {project.symbol}
-        </span>
+        {/* Dark overlay for readable text */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-black/40" />
 
-        <span className="absolute left-4 top-4 rounded border border-white/15 bg-black/50 px-3 py-1 text-[10px] font-bold tracking-widest text-gray-200">
+        {/* Project status */}
+        <span className="absolute left-4 top-4 z-10 rounded border border-white/15 bg-black/60 px-3 py-1 text-[10px] font-bold tracking-widest text-gray-200 backdrop-blur-sm">
           {project.status}
         </span>
 
-        <span className="absolute bottom-4 left-4 text-xs font-bold tracking-widest text-red-400">
+        {/* Language */}
+        <span className="absolute bottom-4 left-4 z-10 text-xs font-bold tracking-widest text-red-400">
           {project.language}
+        </span>
+
+        {/* Poster accent */}
+        <span className="absolute bottom-4 right-4 z-10 text-[10px] font-bold tracking-widest text-white/60">
+          DXE PROJECT
         </span>
       </div>
 
