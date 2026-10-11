@@ -1,10 +1,11 @@
 
 import { useEffect, useState } from 'react'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useLocation } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 
 export default function AdminRoute({ children }) {
   const [status, setStatus] = useState('loading')
+  const location = useLocation()
 
   useEffect(() => {
     let active = true
@@ -56,7 +57,13 @@ export default function AdminRoute({ children }) {
   }
 
   if (status !== 'admin') {
-    return <Navigate to="/auth" replace />
+    return (
+      <Navigate
+        to="/auth"
+        replace
+        state={{ from: location }}
+      />
+    )
   }
 
   return children
