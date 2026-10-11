@@ -1,0 +1,227 @@
+
+@import "tailwindcss";
+
+:root {
+  font-family: Inter, "Segoe UI", Arial, sans-serif;
+  color: #dce6f5;
+  background: #050914;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  --dxe-bg: #050914;
+  --dxe-panel: #0b1930;
+  --dxe-panel-light: #10213c;
+  --dxe-gold: #e8b84a;
+  --dxe-gold-light: #f5d47d;
+  --dxe-text: #dce6f5;
+  --dxe-muted: #8493ab;
+  --dxe-border: rgba(180, 198, 226, 0.13);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 90px;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  color: var(--dxe-text);
+  background:
+    radial-gradient(ellipse at 50% -20%, rgba(31, 66, 115, 0.24), transparent 58%),
+    radial-gradient(ellipse at 100% 45%, rgba(232, 184, 74, 0.035), transparent 35%),
+    var(--dxe-bg);
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.2;
+  background-image:
+    linear-gradient(rgba(126, 155, 198, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(126, 155, 198, 0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+::selection {
+  background: rgba(232, 184, 74, 0.35);
+  color: #fff;
+}
+
+/* Theme compatibility: recolor existing red accents as DXE gold. */
+.text-red-300,
+.text-red-400,
+.text-red-500,
+.text-red-600 {
+  color: var(--dxe-gold) !important;
+}
+
+.bg-red-500,
+.bg-red-600 {
+  background-color: var(--dxe-gold) !important;
+  color: #09101d !important;
+}
+
+.hover\:bg-red-500:hover,
+.hover\:bg-red-600:hover {
+  background-color: var(--dxe-gold-light) !important;
+  color: #09101d !important;
+}
+
+.border-red-500,
+.border-red-500\/20,
+.border-red-500\/30,
+.border-red-500\/40,
+.border-red-500\/50,
+.border-red-500\/60 {
+  border-color: rgba(232, 184, 74, 0.38) !important;
+}
+
+.hover\:border-red-500:hover,
+.hover\:border-red-500\/50:hover,
+.hover\:border-red-500\/60:hover {
+  border-color: var(--dxe-gold) !important;
+}
+
+.hover\:text-red-300:hover,
+.hover\:text-red-400:hover {
+  color: var(--dxe-gold-light) !important;
+}
+
+.focus\:border-red-500:focus,
+.focus-within\:border-red-500:focus-within {
+  border-color: var(--dxe-gold) !important;
+}
+
+.bg-red-500\/5,
+.bg-red-500\/10 {
+  background-color: rgba(232, 184, 74, 0.07) !important;
+}
+
+.bg-red-500\/20 {
+  background-color: rgba(232, 184, 74, 0.14) !important;
+}
+
+.shadow-red-600\/20 {
+  --tw-shadow-color: rgba(232, 184, 74, 0.12);
+}
+
+input,
+textarea,
+select {
+  color: var(--dxe-text);
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: #65748d;
+}
+
+option {
+  color: var(--dxe-text);
+  background: var(--dxe-panel);
+}
+
+/* Give existing page surfaces a consistent midnight finish. */
+main[class*="bg-[#09090b]"],
+main[class*="bg-[#080809]"],
+main[class*="bg-[#09090b]"] section,
+main[class*="bg-[#080809]"] section {
+  color: var(--dxe-text);
+}
+
+article[class*="bg-[#111114]"],
+section[class*="bg-[#101012]"],
+div[class*="bg-[#101013]"],
+div[class*="bg-[#151518]"] {
+  background-color: var(--dxe-panel);
+}
+
+[class*="border-white/10"],
+[class*="border-white/15"] {
+  border-color: var(--dxe-border);
+}
+
+[class*="bg-white/[0.03]"],
+[class*="bg-white/[0.04]"],
+[class*="bg-white/[0.02]"] {
+  background-color: rgba(11, 25, 48, 0.7);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a,
+  button,
+  article {
+    transition-duration: 200ms;
+  }
+}
+
+
+/* Midnight theme for the existing page layouts. */
+main[class*="bg-[#09090b]"],
+main[class*="bg-[#080809]"],
+div[class*="bg-[#09090b]"] {
+  background-color: #050914 !important;
+}
+
+section[class*="bg-[#0e0e11]"] {
+  background-color: #081326 !important;
+}
+
+section[class*="bg-[#101012]"],
+div[class*="bg-[#101013]"],
+article[class*="bg-[#111114]"] {
+  background-color: #0b1930 !important;
+}
+
+/* Replace older red radial glows with subtle blue and gold lighting. */
+[class*="rgba(153,27,27"],
+[class*="rgba(127,29,29"],
+[class*="rgba(239,68,68"] {
+  background-image: none !important;
+}
+
+/* Reusable cinematic surface and focus treatments. */
+article,
+section[class*="rounded-2xl"],
+section[class*="rounded-xl"] {
+  transition:
+    border-color 220ms ease,
+    background-color 220ms ease,
+    transform 220ms ease;
+}
+
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+button:focus-visible,
+a:focus-visible {
+  outline: 2px solid rgba(232, 184, 74, 0.75);
+  outline-offset: 3px;
+}
