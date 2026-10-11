@@ -1,8 +1,6 @@
 
 import { useState } from 'react'
-
-
-const STORAGE_KEY = 'dxe-anime-requests'
+import { supabase } from '../lib/supabase'
 
 export default function Request() {
   const [title, setTitle] = useState('')
@@ -10,44 +8,59 @@ export default function Request() {
   const [genre, setGenre] = useState('Action')
   const [reason, setReason] = useState('')
   const [message, setMessage] = useState('')
-  const [requests, setRequests] = useState(() => {
-    try {
-      return JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]')
-    } catch {
-      return []
-    }
-  })
+  const [saving, setSaving] = useState(false)
+  const [requests, setRequests] = useState([])
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault()
+    setMessage('')
+
+    if (saving) return
+
+    setSaving(true)
 
     const newRequest = {
-      id: `${Date.now()}-${Math.random()}`,
       title: title.trim(),
-      language: language.trim(),
+      language: language.trim() || null,
       genre,
-      reason: reason.trim(),
-      date: new Date().toLocaleDateString(),
+      reason: reason.trim() || null,
     }
 
-    const updated = [newRequest, ...requests]
-
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(updated))
-      setRequests(updated)
+      const { error } = await supabase
+        .from('anime_requests')
+        .insert(newRequest)
+
+      if (error) throw error
+
+      setRequests((previous) => [
+        {
+          ...newRequest,
+          id: `${Date.now()}`,
+          date: new Date().toLocaleDateString(),
+        },
+        ...previous,
+      ])
+
       setTitle('')
       setLanguage('')
       setGenre('Action')
       setReason('')
-      setMessage('Your request has been saved on this browser!')
-    } catch {
-      setMessage('Could not save the request. Please check your browser storage.')
+      setMessage(
+        'Request submitted successfully! The DXE team can now review it.'
+      )
+    } catch (error) {
+      console.error('Request submission failed:', error)
+      setMessage(
+        'Could not submit your request. Please try again.'
+      )
+    } finally {
+      setSaving(false)
     }
   }
 
   return (
     <main className="min-h-screen bg-[#09090b] text-white">
-
       <section className="mx-auto grid max-w-7xl gap-12 px-5 py-14 lg:grid-cols-[1fr_0.8fr] lg:py-20">
         <div>
           <p className="text-xs font-black tracking-[0.35em] text-red-500">
@@ -106,8 +119,13 @@ export default function Request() {
                 onChange={(event) => setGenre(event.target.value)}
                 className="w-full rounded-lg border border-white/10 bg-[#151518] px-4 py-3 text-sm outline-none focus:border-red-500"
               >
-                {['Action', 'Adventure', 'Comedy', 'Drama', 'Fantasy', 'Romance', 'Sci-Fi', 'Slice of Life', 'Thriller', 'Other'].map((item) => (
-                  <option key={item} value={item}>{item}</option>
+                {[
+                  'Action', 'Adventure', 'Comedy', 'Drama', 'Fantasy',
+                  'Romance', 'Sci-Fi', 'Slice of Life', 'Thriller', 'Other',
+                ].map((item) => (
+                  <option key={item} value={item}>
+                    {item}
+                  </option>
                 ))}
               </select>
             </div>
@@ -129,13 +147,14 @@ export default function Request() {
 
             <button
               type="submit"
-              className="w-full rounded-md bg-red-600 px-6 py-4 text-xs font-black tracking-[0.2em] transition hover:bg-red-500"
+              disabled={saving}
+              className="w-full rounded-md bg-red-600 px-6 py-4 text-xs font-black tracking-[0.2em] transition hover:bg-red-500 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              SUBMIT REQUEST ↗
+              {saving ? 'SUBMITTING...' : 'SUBMIT REQUEST ↗'}
             </button>
 
             {message && (
-              <p role="status" className="text-sm text-red-300">
+              <p role="status" aria-live="polite" className="text-sm text-red-300">
                 {message}
               </p>
             )}
@@ -147,16 +166,18 @@ export default function Request() {
             <p className="text-xs font-black tracking-[0.3em] text-red-500">
               COMMUNITY PICKS
             </p>
+
             <h2 className="mt-3 text-2xl font-black">YOUR REQUESTS.</h2>
+
             <p className="mt-3 text-sm leading-6 text-gray-400">
-              Requests submitted from this browser appear here. They are not
-              public or visible to the DXE team until a shared backend is added.
+              Your submitted requests are saved in the DXE database
+              for the team to review.
             </p>
 
             <div className="mt-7 space-y-4">
               {requests.length === 0 ? (
                 <p className="rounded-lg border border-dashed border-white/10 p-5 text-sm text-gray-500">
-                  No requests yet. Be the first to suggest an anime!
+                  Your new submissions will appear here while this page is open.
                 </p>
               ) : (
                 requests.map((request) => (
@@ -166,14 +187,21 @@ export default function Request() {
                   >
                     <div className="flex items-start justify-between gap-3">
                       <h3 className="font-bold">{request.title}</h3>
-                      <span className="text-[10px] text-gray-500">{request.date}</span>
+                      <span className="text-[10px] text-gray-500">
+                        {request.date}
+                      </span>
                     </div>
-                    <p className="mt-2 text-xs text-red-400">{request.genre}</p>
+
+                    <p className="mt-2 text-xs text-red-400">
+                      {request.genre}
+                    </p>
+
                     {request.language && (
                       <p className="mt-2 text-xs text-gray-400">
                         Language: {request.language}
                       </p>
                     )}
+
                     {request.reason && (
                       <p className="mt-3 text-sm leading-6 text-gray-400">
                         {request.reason}
